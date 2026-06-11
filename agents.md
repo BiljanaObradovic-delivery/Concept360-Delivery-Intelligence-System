@@ -47,7 +47,7 @@ Generates scheduled and event-triggered reports across C-Level, Programme, and O
 | Operations Monitoring | Token state, custody ratios, oracle NAV feed, SC events | Core banking uptime, API gateway, settlement processing |
 | Compliance Automation | MiCA Art.76, eWpG registry, CASP licence lifecycle | DORA ICT reporting, PSD2 SCA, AML transaction monitoring |
 | Onboarding | Investor eligibility (ERC-3643), VARA/BaFin classification | PSP customer onboarding, KYC for banking products |
-| Escalation | Custody API down, oracle stale, SC audit finding | T24 outage, wave go-live blocker, vendor SLA breach |
+| Escalation | Custody API down, oracle stale, SC audit finding | Core banking outage, wave go-live blocker, vendor SLA breach |
 | Programme Governance | L0→L7 gate tracking, whitepaper prerequisites, delivery plans | Wave readiness, country go-live sequencing, UAT exit criteria |
 | Reporting | Token compliance score, PoR reconciliation, WP version log | Steering committee reporting, DORA annual ICT report |
 

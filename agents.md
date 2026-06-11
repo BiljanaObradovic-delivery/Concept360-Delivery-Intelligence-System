@@ -33,7 +33,7 @@ Manages investor onboarding flows, KYC/KYT pipeline coordination, CDD/EDD trigge
 Classifies vendor and operational incidents (P1/P2). Builds escalation sequences per RACI. Routes to the right owner with time-bound actions and regulatory obligation mapping.
 
 ### Program Governance
-Tracks delivery plans, gate blockers, risk registers, budget variance, dependency orchestration, and RACI drift. Surfaces programme health signals.
+Tracks delivery plans, gate blockers, risk registers, budget variance, dependency orchestration, and RACI drift. Surfaces program health signals.
 
 ### Reporting & Audit Trail
 Generates scheduled and event-triggered reports across C-Level, Programme, and Operations layers. Maintains immutable audit log. Human approval queue before distribution.

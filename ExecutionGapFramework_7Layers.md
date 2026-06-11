@@ -11,13 +11,14 @@ Every regulated program — regardless of technology stack, jurisdiction, or sca
 
 | Layer | RWA Tokenization | Regulated Fintech / Core Banking |
 |---|---|---|
-| **L0 — Foundation & Operating Model** | Business case, board approval, governance, RACI, OKR framework, budget management, custody model selection | Business case, wave structure, country sequencing, governance, RACI, OKR framework, budget management |
+| **L0 — Operating Model** | Business case, board approval, governance, RACI, OKR framework, budget management, custody model selection | Business case, wave structure, country sequencing, governance, RACI, OKR framework, budget management |
 | **L1 — Regulatory & Legal** | MiCA/CASP, DORA, eWpG, BaFin/NCA licensing, MLRO appointment, AML program, multi-jurisdiction mapping | PSD2, per-country regulatory mapping, local banking law, DORA, AML program, MLRO |
 | **L2 — Structure & Contracts** | SPV incorporation, legal opinion, token classification, vendor MSA, SLA framework, decision tracking | Vendor contracts, SLA framework, integration agreements, decision tracking, assumption log |
 | **L3 — Technical Architecture** | SC design, oracle selection, custody architecture, chain configuration, KYC/KYT integration, API governance | Core system design, middleware strategy, API architecture, vendor governance, KYC/AML pipeline |
-| **L4 — Build & Audit** | SC development, SC audit #1, pen test, SAST/DAST, DORA ICT third-party register, ISO 27001 gap | Core build, T24/MuleSoft/Azure integration per country, pen test, DORA ICT, security audit |
+| **L4 — Build & Audit** | SC development, SC audit #1, pen test, SAST/DAST, DORA ICT third-party register, ISO 27001 gap | Core build, per-country integration across core banking system and middleware, pen test, DORA ICT, security audit |
 | **L5 — Integration & Testing** | End-to-end testing, settlement, PoR baseline, SC audit #2, UAT, rollback plan, gate sign-off | UAT per wave, end-to-end integration, gate sign-off, rollback plan, regulatory test filing |
 | **L6 — Go-Live & Operations** | G-OPS gate, hypercare, KPI/KRI monitoring, change & incident management, DORA monitoring, regulatory reporting | Wave activation, hypercare, BAU transition, KPI/KRI monitoring, change & incident management |
+| **L7 — Post-Launch, Steady State & Continuity** | Vendor SLA management, regulatory reporting calendar, audit schedule, incident & change management, new project initiation from operations | Ongoing vendor governance, regulatory reporting, audit calendar, incident management, operational continuity planning |
 
 ---
 
@@ -33,15 +34,18 @@ L2 architecture begins at 50% of L1. L4 testing begins at 70% of L3. L6 operatio
 MiCA, DORA, and per-country regulatory requirements are gate criteria — not external dependencies. Missing a compliance gate criterion blocks the gate. It does not simply delay it.
 
 **Vendor governance runs across all layers.**
-Multi-vendor coordination, SLA management, escalation ownership, and third-party risk tracking are not L2 or L3 tasks — they are continuous from L0 through L6. Vendor escalation fragmentation is one of the most common causes of operational drift in regulated programs.
+Multi-vendor coordination, SLA management, escalation ownership, and third-party risk tracking are not L2 or L3 tasks — they are continuous from L0 through L7. Vendor escalation fragmentation is one of the most common causes of operational drift in regulated programs.
 
 **Change and incident management starts at L0.**
 A change management process that does not exist at L0 cannot be retrofitted at L5. Incident classification, escalation paths, and regulatory notification obligations must be defined before go-live — not after the first incident.
 
+**L7 is not the end. It is the operating state.**
+Post-launch stability does not manage itself. L7 begins at go-live — not after the delivery team exits. Vendor SLA enforcement, regulatory reporting cadence, audit calendar, and the capacity to initiate new programs from a stable operational base require the same governance discipline as every layer that preceded it.
+
 ---
+
 > For the full framework — [Start the conversation](https://biljanaobradovic-delivery.github.io/execution-gap-framework/#contact)
 
 ---
-
 *Biljana Obradović · Concept360 · 2026*
 *RWA Execution Gap Methodology © Biljana Obradović · Concept360 · 2026*

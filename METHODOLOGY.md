@@ -47,7 +47,7 @@ Used when: priorities shift rapidly, work is continuous and unpredictable, SLA a
 
 ## The Execution Gap Framework — 7 Operational Layers
 
-Both contexts — RWA tokenization and regulated fintech — are structured across seven operational layers. The layers ensure zero blind spots from Foundation & Operating Model through to Go-Live & Operations.
+Both contexts — RWA tokenization and regulated fintech — are structured across seven operational layers. The layers ensure zero blind spots "...from Operating Model through to Post-Launch, Steady State & Continuity.
 
 The sequence matters. Skipping a layer does not remove it — it relocates the problem to a later, more expensive stage.
 

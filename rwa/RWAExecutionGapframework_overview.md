@@ -22,13 +22,14 @@ Every RWA program requires structured delivery across seven layers, in sequence.
 
 | Layer | Focus |
 |---|---|
-| L0 — Foundation & Operating Model | Governance, RACI, OKR framework, budget management, decision rights |
+| L0 — Operating Model | Governance, RACI, OKR framework, budget management, decision rights |
 | L1 — Regulatory & Legal | MiCA/CASP, DORA, eWpG, MLRO, AML program, multi-jurisdiction |
 | L2 — Structure & Contracts | SPV, token classification, vendor MSA, SLA framework, decision tracking |
 | L3 — Technical Architecture | SC design, custody architecture, oracle selection, vendor governance |
 | L4 — Build & Audit | SC development, SC audit, pen test, DORA ICT, SAST/DAST |
 | L5 — Integration & Testing | End-to-end, settlement, PoR baseline, UAT, rollback plan, gate sign-off |
 | L6 — Go-Live & Operations | G-OPS gate, hypercare, KPI/KRI monitoring, change & incident management |
+| L7 — Post-Launch, Steady State & Continuity | Vendor SLA management, regulatory reporting, audit calendar, operational continuity |
 
 ---
 
@@ -71,7 +72,7 @@ The complete framework — available upon qualified engagement — includes:
 
 If you are building or scaling a regulated RWA operation and the operational layer is not keeping up — that is what this framework was built for.
 
-→ [Execution Gap Assessment — Package A](https://biljanaobradovic-delivery.github.io/execution-gap-framework/#packages)
+→ [Execution Gap Assessment](https://biljanaobradovic-delivery.github.io/execution-gap-framework/#packages)
 → [Start the conversation](https://biljanaobradovic-delivery.github.io/execution-gap-framework/#contact)
 
 ---
@@ -79,4 +80,3 @@ If you are building or scaling a regulated RWA operation and the operational lay
 *RWA Execution Gap Methodology © Biljana Obradović · Concept360 · 2026*
 → [biljana.obradovic@concept360.rs](mailto:biljana.obradovic@concept360.rs)
 → [linkedin.com/in/biljana-obradovic-28390a8](https://linkedin.com/in/biljana-obradovic-28390a8)
-

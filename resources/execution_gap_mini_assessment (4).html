@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Execution Gap Mini Assessment — Concept360</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0F1117; --paper: #F7F4EF; --gold: #C8960A; --gold2: #E8B020;
+  --warm: #E8E2D8; --mid: #6B6560; --light: #B8B0A4; --rule: rgba(15,17,23,0.12);
+  --red: #C0392B; --green: #1E7A4A; --amber: #B7770D;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { background:var(--paper); color:var(--ink); font-family:'DM Sans',sans-serif; font-size:16px; line-height:1.6; }
+nav { position:fixed; top:0; left:0; right:0; z-index:50; padding:18px 48px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--rule); background:rgba(247,244,239,0.95); backdrop-filter:blur(12px); }
+.nav-brand { font-family:'DM Mono',monospace; font-size:13px; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink); text-decoration:none; }
+.nav-brand span { color:var(--gold); }
+.nav-meta { font-family:'DM Mono',monospace; font-size:10px; color:var(--light); letter-spacing:0.1em; text-transform:uppercase; }
+.progress-bar-wrap { position:fixed; top:57px; left:0; right:0; height:3px; background:var(--warm); z-index:49; }
+.progress-bar { height:100%; background:var(--gold); transition:width 0.4s ease; width:0%; }
+.screen { min-height:100vh; display:none; }
+.screen.active { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:100px 24px 60px; }
+.intro-wrap { max-width:580px; width:100%; }
+.intro-eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:24px; }
+.intro-title { font-family:'Playfair Display',serif; font-size:32px; font-weight:700; line-height:1.15; margin-bottom:20px; }
+.intro-body { font-size:14px; color:var(--mid); line-height:1.8; margin-bottom:28px; }
+.intro-table { width:100%; border-collapse:collapse; margin-bottom:20px; }
+.intro-table td { padding:10px 16px; font-size:13px; border-bottom:1px solid var(--rule); }
+.intro-table td:first-child { font-family:'DM Mono',monospace; font-size:11px; color:var(--gold); letter-spacing:0.05em; width:110px; }
+.intro-table td:last-child { color:var(--mid); }
+.intro-note { font-size:12px; color:var(--mid); line-height:1.7; margin-bottom:24px; padding:12px 16px; border-left:2px solid var(--gold); background:rgba(200,150,10,0.04); font-style:italic; }
+.field-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+.text-input { width:100%; padding:14px 16px; font-family:'DM Sans',sans-serif; font-size:14px; background:white; border:1px solid var(--rule); color:var(--ink); outline:none; transition:border-color 0.2s; }
+.text-input:focus { border-color:var(--gold); }
+.field-error { font-family:'DM Mono',monospace; font-size:10px; color:var(--red); margin-top:5px; display:none; }
+.gdpr-notice { font-size:11px; color:var(--light); line-height:1.7; margin-top:16px; margin-bottom:24px; padding:12px 16px; border-left:2px solid var(--rule); }
+.gdpr-notice strong { color:var(--mid); font-weight:500; }
+.btn-primary { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; padding:14px 28px; background:var(--ink); color:var(--paper); border:1px solid var(--ink); cursor:pointer; transition:all 0.2s; display:inline-block; width:100%; margin-top:8px; }
+.btn-primary:hover { background:var(--gold); border-color:var(--gold); color:var(--ink); }
+.page-footer { font-size:11px; color:var(--light); line-height:1.6; text-align:center; padding:24px 0; border-top:1px solid var(--rule); margin-top:40px; width:100%; }
+#screen-assessment { display:none; flex-direction:column; align-items:center; padding:100px 24px 80px; min-height:100vh; }
+#screen-assessment.active { display:flex; }
+.assessment-wrap { max-width:680px; width:100%; }
+.dim-block { margin-bottom:48px; }
+.dim-header { display:flex; align-items:flex-start; gap:16px; margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid var(--rule); }
+.dim-code { font-family:'DM Mono',monospace; font-size:11px; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-top:4px; white-space:nowrap; }
+.dim-title { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; line-height:1.2; }
+.dim-sub { font-family:'DM Mono',monospace; font-size:10px; color:var(--light); letter-spacing:0.05em; margin-top:4px; }
+.question-block { padding:16px 20px; background:white; border-left:3px solid transparent; margin-bottom:10px; transition:border-color 0.2s; }
+.question-block.answered { border-left-color:var(--gold); }
+.question-block.mandatory-unanswered { border-left-color:var(--red) !important; background:#fff8f8; }
+.question-q { font-family:'DM Mono',monospace; font-size:9px; color:var(--light); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; }
+.question-text { font-size:13px; color:var(--ink); line-height:1.6; margin-bottom:6px; }
+.question-tooltip { font-size:11px; color:var(--light); font-style:italic; margin-bottom:14px; }
+.answer-row { display:flex; gap:8px; }
+.answer-btn { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; padding:8px 12px; background:transparent; border:1px solid var(--rule); color:var(--mid); cursor:pointer; transition:all 0.15s; flex:1; }
+.answer-btn:hover { border-color:var(--gold); color:var(--ink); }
+.answer-btn.selected-yes { background:rgba(30,122,74,0.08); border-color:#1E7A4A; color:#1E7A4A; }
+.answer-btn.selected-partial { background:rgba(183,119,13,0.08); border-color:var(--amber); color:var(--amber); }
+.answer-btn.selected-no { background:rgba(192,57,43,0.08); border-color:var(--red); color:var(--red); }
+.submit-section { margin-top:48px; padding-top:32px; border-top:1px solid var(--rule); }
+.submit-status { font-family:'DM Mono',monospace; font-size:11px; color:var(--light); margin-bottom:12px; }
+.submit-status span { color:var(--gold); }
+.mandatory-warning { font-family:'DM Mono',monospace; font-size:11px; color:var(--red); margin-bottom:16px; display:none; }
+.btn-submit { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; padding:16px 32px; background:var(--ink); color:var(--paper); border:1px solid var(--ink); cursor:pointer; transition:all 0.2s; }
+.btn-submit:hover { background:var(--gold); border-color:var(--gold); color:var(--ink); }
+.transition-wrap { max-width:480px; width:100%; text-align:center; }
+.transition-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:32px; }
+.transition-title { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; margin-bottom:16px; }
+.transition-bar-outer { width:100%; height:3px; background:var(--warm); margin:32px 0; overflow:hidden; }
+.transition-bar-inner { height:100%; background:var(--gold); animation:transitionFill 2.2s ease forwards; }
+@keyframes transitionFill { 0%{width:0%} 60%{width:70%} 85%{width:88%} 100%{width:100%} }
+.transition-sub { font-family:'DM Mono',monospace; font-size:11px; color:var(--mid); letter-spacing:0.05em; }
+.results-wrap { max-width:620px; width:100%; }
+.results-eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:20px; }
+.results-title { font-family:'Playfair Display',serif; font-size:28px; font-weight:700; margin-bottom:8px; }
+.results-firm { font-family:'DM Mono',monospace; font-size:12px; color:var(--mid); margin-bottom:40px; }
+.gap-level-block { padding:32px; margin-bottom:40px; border:1px solid var(--rule); background:white; }
+.gap-level-label { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--light); margin-bottom:12px; }
+.gap-level-value { font-family:'Playfair Display',serif; font-size:52px; font-weight:700; line-height:1; margin-bottom:16px; }
+.gap-level-value.low { color:var(--green); }
+.gap-level-value.moderate { color:var(--gold); }
+.gap-level-value.high { color:var(--amber); }
+.gap-level-value.critical { color:var(--red); }
+.benchmark-bar { display:flex; border:1px solid var(--rule); overflow:hidden; margin-bottom:0; }
+.benchmark-seg { flex:1; padding:10px 6px; text-align:center; font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.06em; text-transform:uppercase; border-right:1px solid var(--rule); }
+.benchmark-seg:last-child { border-right:none; }
+.signal-block { padding:24px 28px; margin-bottom:40px; background:var(--ink); color:var(--paper); }
+.signal-label { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:16px; }
+.signal-item { display:flex; gap:14px; padding:12px 0; border-bottom:1px solid rgba(247,244,239,0.08); }
+.signal-item:last-child { border-bottom:none; }
+.signal-num { font-family:'DM Mono',monospace; font-size:10px; color:var(--gold); min-width:20px; margin-top:2px; }
+.signal-text { font-size:13px; color:rgba(247,244,239,0.82); line-height:1.7; }
+.dim-results { margin-bottom:40px; }
+.dim-results-label { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:16px; }
+.dim-row { display:grid; grid-template-columns:1fr 80px; gap:16px; align-items:center; padding:12px 0; border-bottom:1px solid var(--rule); }
+.dim-row:first-of-type { border-top:1px solid var(--rule); }
+.dim-row-label { font-family:'DM Mono',monospace; font-size:10px; color:var(--mid); }
+.dim-row-status { font-family:'DM Mono',monospace; font-size:9px; text-align:right; letter-spacing:0.05em; text-transform:uppercase; }
+.next-section { padding:32px; background:var(--ink); color:var(--paper); margin-bottom:40px; }
+.next-label { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:16px; }
+.next-text { font-size:14px; color:rgba(247,244,239,0.7); line-height:1.8; margin-bottom:24px; }
+.btn-call { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; padding:14px 28px; background:var(--gold); color:var(--ink); border:1px solid var(--gold); cursor:pointer; transition:all 0.2s; text-decoration:none; display:inline-block; }
+.btn-call:hover { background:var(--gold2); border-color:var(--gold2); }
+.results-gdpr { font-size:11px; color:var(--light); line-height:1.7; padding:16px; border-left:2px solid var(--rule); margin-bottom:0; }
+@media(max-width:600px) {
+  nav { padding:16px 20px; }
+  .screen.active { padding:90px 16px 48px; }
+  .gap-level-value { font-size:38px; }
+  .benchmark-seg { font-size:8px; padding:8px 4px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://biljanaobradovic-delivery.github.io/execution-gap-framework/" class="nav-brand"><span>CONCEPT</span>360</a>
+  <div class="nav-meta">Execution Gap Mini Assessment</div>
+</nav>
+<div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+
+<!-- INTRO -->
+<div class="screen active" id="screen-intro">
+  <div class="intro-wrap">
+    <div class="intro-eyebrow">Execution Gap Mini Assessment</div>
+    <h1 class="intro-title">Does your operational model match your regulatory approval?</h1>
+    <p class="intro-body">10 questions. 5 operational dimensions. Instant signal.<br><br>This diagnostic detects whether an Execution Gap exists in your organization — and how severe it is. Answer based on what is actually in place today, not what is planned or in progress.</p>
+
+    <table class="intro-table">
+      <tr><td>Yes</td><td>Fully in place and operational</td></tr>
+      <tr><td>Partially</td><td>Exists but incomplete or inconsistently applied</td></tr>
+      <tr><td>No</td><td>Not yet implemented</td></tr>
+    </table>
+
+    <div class="intro-note">References to MiCA and DORA apply to EU-regulated entities. If you operate under a different regulatory framework — ADGM, MAS, VARA, SEC/FINRA or equivalent — answer based on your applicable obligations.</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+      <div>
+        <div class="field-label">Organization name <span style="color:var(--red)">*</span></div>
+        <input type="text" class="text-input" id="org-name" placeholder="e.g. Tokeny Solutions">
+        <div class="field-error" id="err-org">Please enter your organization name.</div>
+      </div>
+      <div>
+        <div class="field-label">Your role <span style="color:var(--red)">*</span></div>
+        <input type="text" class="text-input" id="org-role" placeholder="e.g. CEO, COO, Head of Compliance">
+        <div class="field-error" id="err-role">Please enter your role.</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:8px;">
+      <div class="field-label">Your email address <span style="color:var(--red)">*</span></div>
+      <input type="email" class="text-input" id="user-email" placeholder="your@company.com">
+      <div class="field-error" id="err-email">Please enter a valid business email address.</div>
+    </div>
+
+    <div class="gdpr-notice">
+      <strong>Data notice.</strong> Your name, organization, role, and email are collected solely for the purpose of this assessment and any follow-up you request. Your data will not be used for marketing, will not be shared with third parties, and will be processed in accordance with GDPR. By starting the assessment you confirm you have read this notice.
+    </div>
+
+    <button class="btn-primary" onclick="startAssessment()">Start the Assessment →</button>
+    <div class="page-footer">© 2026 Concept360 · Biljana Obradović · biljana.obradovic@concept360.rs</div>
+  </div>
+</div>
+
+<!-- ASSESSMENT -->
+<div class="screen" id="screen-assessment">
+  <div class="assessment-wrap" id="assessment-content"></div>
+</div>
+
+<!-- TRANSITION -->
+<div class="screen" id="screen-transition">
+  <div class="transition-wrap">
+    <div class="transition-label">Execution Gap Mini Assessment</div>
+    <div class="transition-title">Mapping your execution gap across 5 operational dimensions…</div>
+    <div class="transition-bar-outer"><div class="transition-bar-inner"></div></div>
+    <div class="transition-sub">This will take a moment</div>
+  </div>
+  <div class="page-footer" style="position:fixed;bottom:0;left:0;right:0;border-top:1px solid var(--rule);background:var(--paper);">© 2026 Concept360 · Biljana Obradović · biljana.obradovic@concept360.rs</div>
+</div>
+
+<!-- RESULTS -->
+<div class="screen" id="screen-results">
+  <div class="results-wrap" id="results-content"></div>
+</div>
+
+<script>
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxK3YADtWiJWZDr0c02cC21hf2UqS8Vf53AbMjU5t-8fC0yYb2DcGv_bD9kEmG_gi22/exec';
+
+const BLOCKED_DOMAINS = [
+  'test.com','fake.com','example.com','xxx.com','xx.com','mailinator.com',
+  'guerrillamail.com','tempmail.com','throwam.com','yopmail.com','trashmail.com',
+  'sharklasers.com','spam4.me','dispostable.com','maildrop.cc','discard.email',
+  'spamgourmet.com','guerrillamailblock.com','grr.la','spam.la','trashmail.me',
+  'fakeinbox.com','throwam.com','tempr.email','dispostable.com','spamfree24.org'
+];
+
+const BLOCKED_WORDS = ['test','xxx','aaa','bbb','ccc','asdf','qwerty','123','fake','null','none','na','n/a'];
+
+const DIMENSIONS = [
+  {
+    code: "D1",
+    title: "Governance & Decision Integrity",
+    sub: "Ownership · accountability · decision rights",
+    questions: [
+      {
+        text: "Is there a named individual — not a team — accountable for each major operational area, with documented decision rights?",
+        tooltip: null,
+        signals: {
+          no: "No named individual accountable for major operational areas — ownership is assumed, not assigned.",
+          partial: "Accountability for major operational areas is partially defined — gaps exist in coverage or documentation."
+        }
+      },
+      {
+        text: "Are ownership and accountability assignments actively applied in daily operations, not only documented?",
+        tooltip: "e.g. RACI, decision log, org chart with defined decision rights",
+        signals: {
+          no: "Accountability assignments exist on paper but are not applied in daily operations.",
+          partial: "Accountability assignments are inconsistently applied — some areas follow them, others do not."
+        }
+      }
+    ]
+  },
+  {
+    code: "D2",
+    title: "Regulatory Operationalization",
+    sub: "Obligations in practice · compliance authority · reporting",
+    questions: [
+      {
+        text: "Are your regulatory obligations translated into named daily operational processes with assigned individual owners?",
+        tooltip: null,
+        signals: {
+          no: "Regulatory obligations are not translated into named daily operational processes.",
+          partial: "Some regulatory obligations are operationalized — others remain at the policy or documentation level."
+        }
+      },
+      {
+        text: "Does the compliance function have real operational authority and decision-making power — not just a formal title?",
+        tooltip: null,
+        signals: {
+          no: "Compliance function lacks real operational authority — regulatory risk is not owned in practice.",
+          partial: "Compliance function has limited authority — operational decisions are not consistently deferred to it."
+        }
+      }
+    ]
+  },
+  {
+    code: "D3",
+    title: "Vendor & Dependency Control",
+    sub: "Agreements · performance expectations · escalation",
+    questions: [
+      {
+        text: "Do all critical vendors operate under agreements with defined responsibilities, performance expectations, and escalation paths?",
+        tooltip: null,
+        signals: {
+          no: "Critical vendors operate without agreements that define responsibilities and escalation paths.",
+          partial: "Vendor agreements exist but are incomplete — performance expectations or escalation paths are not fully defined."
+        }
+      },
+      {
+        text: "When a critical vendor fails to perform, is there a named individual who owns the response — with defined steps and timelines for escalation?",
+        tooltip: null,
+        signals: {
+          no: "No named owner for vendor non-performance response — escalation is reactive and unstructured.",
+          partial: "Vendor escalation ownership is partially defined — steps or timelines are unclear in practice."
+        }
+      }
+    ]
+  },
+  {
+    code: "D4",
+    title: "Audit & Evidence Readiness",
+    sub: "Evidence by design · audit register · accessibility",
+    questions: [
+      {
+        text: "Is compliance and operational evidence created continuously during work — not assembled when a review or audit becomes imminent?",
+        tooltip: null,
+        signals: {
+          no: "Evidence is assembled retroactively — not created as a by-product of operational work.",
+          partial: "Evidence creation is inconsistent — some areas produce it in real time, others assemble it retrospectively."
+        }
+      },
+      {
+        text: "Is there a centralized and actively maintained register of audit evidence, accessible to relevant stakeholders at any time?",
+        tooltip: null,
+        signals: {
+          no: "No centralized audit evidence register — evidence is fragmented and not readily accessible.",
+          partial: "An evidence register exists but is not consistently maintained or fully accessible."
+        }
+      }
+    ]
+  },
+  {
+    code: "D5",
+    title: "Operational Resilience",
+    sub: "Risk escalation · operational health · leadership visibility",
+    questions: [
+      {
+        text: "Is there a defined process for identifying and escalating operational risks before they become incidents or regulatory findings?",
+        tooltip: null,
+        signals: {
+          no: "No defined process for identifying and escalating operational risks before they materialize.",
+          partial: "Risk identification exists in some areas but escalation paths are not consistently defined or followed."
+        }
+      },
+      {
+        text: "Does leadership receive regular, structured reporting on operational health — not only when problems arise?",
+        tooltip: null,
+        signals: {
+          no: "Leadership receives no regular structured reporting on operational health — visibility is reactive.",
+          partial: "Operational health reporting exists but is irregular or not structured consistently."
+        }
+      }
+    ]
+  }
+];
+
+let answers = {};
+let orgName = "", orgRole = "", userEmail = "";
+const VAR_GREEN = '#1E7A4A';
+const VAR_AMBER = '#B7770D';
+
+function validateInputs() {
+  let valid = true;
+  const nameVal = document.getElementById('org-name').value.trim();
+  const roleVal = document.getElementById('org-role').value.trim();
+  const emailVal = document.getElementById('user-email').value.trim().toLowerCase();
+
+  // Reset
+  ['err-org','err-role','err-email'].forEach(id => document.getElementById(id).style.display = 'none');
+  ['org-name','org-role','user-email'].forEach(id => document.getElementById(id).style.borderColor = '');
+
+  // Org name
+  if (!nameVal || nameVal.length < 3 || BLOCKED_WORDS.includes(nameVal.toLowerCase())) {
+    document.getElementById('err-org').style.display = 'block';
+    document.getElementById('org-name').style.borderColor = 'var(--red)';
+    valid = false;
+  }
+
+  // Role
+  if (!roleVal || roleVal.length < 2 || BLOCKED_WORDS.includes(roleVal.toLowerCase())) {
+    document.getElementById('err-role').style.display = 'block';
+    document.getElementById('org-role').style.borderColor = 'var(--red)';
+    valid = false;
+  }
+
+  // Email format
+  if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+    document.getElementById('err-email').textContent = 'Please enter a valid email address.';
+    document.getElementById('err-email').style.display = 'block';
+    document.getElementById('user-email').style.borderColor = 'var(--red)';
+    valid = false;
+  } else {
+    // Blocked domain
+    const domain = emailVal.split('@')[1];
+    if (BLOCKED_DOMAINS.includes(domain)) {
+      document.getElementById('err-email').textContent = 'Please use a valid business email address.';
+      document.getElementById('err-email').style.display = 'block';
+      document.getElementById('user-email').style.borderColor = 'var(--red)';
+      valid = false;
+    }
+  }
+
+  return { valid, nameVal, roleVal, emailVal };
+}
+
+function startAssessment() {
+  const { valid, nameVal, roleVal, emailVal } = validateInputs();
+  if (!valid) return;
+
+  orgName = nameVal;
+  orgRole = roleVal;
+  userEmail = emailVal;
+  answers = {};
+
+  sendToSheets('started');
+  buildAssessment();
+  showScreen('screen-assessment');
+}
+
+function buildAssessment() {
+  const wrap = document.getElementById('assessment-content');
+  let html = '';
+
+  DIMENSIONS.forEach((dim, di) => {
+    html += `<div class="dim-block">
+      <div class="dim-header">
+        <div class="dim-code">${dim.code}</div>
+        <div>
+          <div class="dim-title">${dim.title}</div>
+          <div class="dim-sub">${dim.sub}</div>
+        </div>
+      </div>`;
+
+    dim.questions.forEach((q, qi) => {
+      const key = `${di}_${qi}`;
+      html += `<div class="question-block" id="qblock_${key}">
+        <div class="question-q">Q${di * 2 + qi + 1}</div>
+        <div class="question-text">${q.text}</div>
+        ${q.tooltip ? `<div class="question-tooltip">${q.tooltip}</div>` : ''}
+        <div class="answer-row">
+          <button class="answer-btn" onclick="setAnswer('${key}','yes',this)">Yes</button>
+          <button class="answer-btn" onclick="setAnswer('${key}','partial',this)">Partially</button>
+          <button class="answer-btn" onclick="setAnswer('${key}','no',this)">No</button>
+        </div>
+      </div>`;
+    });
+
+    html += `</div>`;
+  });
+
+  html += `
+  <div class="submit-section">
+    <div class="submit-status">Questions answered: <span id="answered-count">0</span> of 10</div>
+    <div class="mandatory-warning" id="mandatory-warning">Please answer all 10 questions before continuing.</div>
+    <button class="btn-submit" onclick="trySubmit()">See My Results →</button>
+  </div>
+  <div class="page-footer">© 2026 Concept360 · Biljana Obradović · biljana.obradovic@concept360.rs</div>`;
+
+  wrap.innerHTML = html;
+  updateCount();
+}
+
+function setAnswer(key, val, btn) {
+  answers[key] = val;
+  const block = document.getElementById(`qblock_${key}`);
+  block.classList.add('answered');
+  block.classList.remove('mandatory-unanswered');
+  block.querySelectorAll('.answer-btn').forEach(b => b.classList.remove('selected-yes','selected-partial','selected-no'));
+  if (val === 'yes') btn.classList.add('selected-yes');
+  else if (val === 'partial') btn.classList.add('selected-partial');
+  else btn.classList.add('selected-no');
+  updateCount();
+}
+
+function updateCount() {
+  const answered = Object.keys(answers).length;
+  document.getElementById('answered-count').textContent = answered;
+  document.getElementById('progress-bar').style.width = (answered / 10 * 100) + '%';
+}
+
+function trySubmit() {
+  const allKeys = [];
+  DIMENSIONS.forEach((dim, di) => dim.questions.forEach((q, qi) => allKeys.push(`${di}_${qi}`)));
+  const missing = allKeys.filter(k => !answers[k]);
+
+  if (missing.length > 0) {
+    document.getElementById('mandatory-warning').style.display = 'block';
+    missing.forEach(k => {
+      const block = document.getElementById(`qblock_${k}`);
+      if (block) block.classList.add('mandatory-unanswered');
+    });
+    document.getElementById(`qblock_${missing[0]}`).scrollIntoView({ behavior:'smooth', block:'center' });
+    return;
+  }
+
+  document.getElementById('mandatory-warning').style.display = 'none';
+  showScreen('screen-transition');
+  sendToSheets('completed');
+  setTimeout(showResults, 2200);
+}
+
+function calcGapLevel() {
+  let score = 0;
+  Object.values(answers).forEach(v => {
+    if (v === 'partial') score += 1;
+    else if (v === 'no') score += 2;
+  });
+  if (score <= 4)  return { level:'Low Gap',      cls:'low',      bench:0, score, sub:'Operational foundations are largely in place. Targeted formalization will strengthen readiness before regulatory scrutiny increases.' };
+  if (score <= 9)  return { level:'Moderate Gap', cls:'moderate', bench:1, score, sub:'Operational weaknesses exist across one or more areas. These are manageable now — but will compound under scaling or audit pressure.' };
+  if (score <= 14) return { level:'High Gap',     cls:'high',     bench:2, score, sub:'Significant execution gaps identified across multiple dimensions. Structured intervention is required before these become regulatory or operational incidents.' };
+  return                   { level:'Critical Gap', cls:'critical', bench:3, score, sub:'Operational model does not have the stability required for sustained regulated operations. Regulatory and business risk is material and immediate.' };
+}
+
+function getDimStatus(di) {
+  const score = [0,1].reduce((s, qi) => {
+    const v = answers[`${di}_${qi}`];
+    return s + (v === 'yes' ? 0 : v === 'partial' ? 1 : 2);
+  }, 0);
+  if (score === 0) return { label:'No gap',       color:VAR_GREEN };
+  if (score === 1) return { label:'Low gap',      color:'#C8960A' };
+  if (score === 2) return { label:'Moderate gap', color:VAR_AMBER };
+  if (score === 3) return { label:'High gap',     color:'#C0392B' };
+  return                   { label:'Critical gap', color:'#C0392B' };
+}
+
+function getSignals() {
+  const all = [];
+  DIMENSIONS.forEach((dim, di) => {
+    dim.questions.forEach((q, qi) => {
+      const key = `${di}_${qi}`;
+      const val = answers[key];
+      if (val === 'no' && q.signals.no) all.push({ text: q.signals.no, severity: 0 });
+      else if (val === 'partial' && q.signals.partial) all.push({ text: q.signals.partial, severity: 1 });
+    });
+  });
+  return all.sort((a,b) => a.severity - b.severity).slice(0,3);
+}
+
+function sendToSheets(status) {
+  const profile = calcGapLevel();
+  const dimStatuses = DIMENSIONS.map((d,i) => getDimStatus(i).label);
+  const fullAnswers = Object.entries(answers).map(([k,v]) => `${k}:${v}`).join(' | ') || 'started — no answers yet';
+  const payload = {
+    organization: orgName,
+    role: orgRole,
+    email: userEmail,
+    gapLevel: status === 'completed' ? profile.level : 'Started — not completed',
+    score: status === 'completed' ? profile.score + '/20' : '—',
+    d1: dimStatuses[0] || '—',
+    d2: dimStatuses[1] || '—',
+    d3: dimStatuses[2] || '—',
+    d4: dimStatuses[3] || '—',
+    d5: dimStatuses[4] || '—',
+    fullAnswers: fullAnswers
+  };
+  fetch(SHEETS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(err => console.warn('Sheet write failed:', err));
+}
+
+function showResults() {
+  const profile = calcGapLevel();
+  const signals = getSignals();
+
+  const benchLabels = ['Low Gap','Moderate Gap','High Gap','Critical Gap'];
+  const benchColors = ['#1E7A4A','#C8960A','#B7770D','#C0392B'];
+  const benchBg    = ['rgba(30,122,74,0.1)','rgba(200,150,10,0.1)','rgba(183,119,13,0.1)','rgba(192,57,43,0.1)'];
+
+  const benchBar = benchLabels.map((l,i) => {
+    const active = i === profile.bench;
+    return `<div class="benchmark-seg" style="background:${active?benchBg[i]:'transparent'};color:${active?benchColors[i]:'var(--light)'};font-weight:${active?'600':'400'}">${l}</div>`;
+  }).join('');
+
+  const signalsHtml = signals.length > 0
+    ? signals.map((s,i) => `<div class="signal-item"><div class="signal-num">0${i+1}</div><div class="signal-text">${s.text}</div></div>`).join('')
+    : `<div class="signal-item"><div class="signal-num">—</div><div class="signal-text">No critical signals identified. Your operational foundations are largely in place.</div></div>`;
+
+  const dimRowsHtml = DIMENSIONS.map((dim,di) => {
+    const st = getDimStatus(di);
+    return `<div class="dim-row">
+      <div class="dim-row-label">${dim.code} — ${dim.title}</div>
+      <div class="dim-row-status" style="color:${st.color}">${st.label}</div>
+    </div>`;
+  }).join('');
+
+  const nextText = profile.bench >= 2
+    ? 'Your results indicate a significant Execution Gap across multiple operational dimensions. A 30-minute call will map the highest-risk areas and define the right next step.'
+    : 'Your results suggest execution gaps that warrant a closer look. A 30-minute call will confirm whether the signals identified here are isolated or part of a broader operational pattern.';
+
+  const mailSubject = `Execution Gap Mini Assessment — ${orgName}`;
+  const mailBody = buildEmailBody(profile, signals);
+  const mailLink = `mailto:biljana.obradovic@concept360.rs?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
+
+  document.getElementById('results-content').innerHTML = `
+    <div class="results-eyebrow">Execution Gap Mini Assessment — Results</div>
+    <div class="results-title">Execution Gap Signal</div>
+    <div class="results-firm">${orgName} · ${orgRole}</div>
+
+    <div class="gap-level-block">
+      <div class="gap-level-label">Your Execution Gap Level</div>
+      <div class="gap-level-value ${profile.cls}">${profile.level}</div>
+      <div class="benchmark-bar">${benchBar}</div>
+    </div>
+
+    <div class="signal-block">
+      <div class="signal-label">Key execution gaps identified</div>
+      ${signalsHtml}
+    </div>
+
+    <div class="dim-results">
+      <div class="dim-results-label">Signal by dimension</div>
+      ${dimRowsHtml}
+    </div>
+
+    <div class="next-section">
+      <div class="next-label">Recommended next step</div>
+      <div class="next-text">${nextText}</div>
+      <a class="btn-call" href="${mailLink}">Schedule a Call →</a>
+      <p style="font-size:11px;color:rgba(247,244,239,0.4);line-height:1.6;margin-top:16px;">Clicking above will open your email client. Concept360 will respond within two business days to confirm a time.</p>
+    </div>
+
+    <div class="results-gdpr">
+      Your data — organization, role, email, and assessment responses — is used solely for this assessment and any follow-up you request. Not used for marketing. Not shared with third parties. Processed in accordance with GDPR.
+    </div>
+
+    <div class="page-footer">
+      This mini assessment is a directional signal — not a full diagnostic.<br><br>
+      © 2026 Concept360 · Biljana Obradović · biljana.obradovic@concept360.rs
+    </div>`;
+
+  showScreen('screen-results');
+}
+
+function buildEmailBody(profile, signals) {
+  const date = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+  let b = `EXECUTION GAP MINI ASSESSMENT — RESULTS\n${'='.repeat(50)}\n\n`;
+  b += `Organization: ${orgName}\nRole: ${orgRole}\nEmail: ${userEmail}\nDate: ${date}\n\n`;
+  b += `EXECUTION GAP LEVEL: ${profile.level}\n\n`;
+  b += `TOP SIGNALS:\n`;
+  signals.forEach((s,i) => { b += `  ${i+1}. ${s.text}\n`; });
+  b += `\nSIGNAL BY DIMENSION:\n`;
+  DIMENSIONS.forEach((dim,di) => {
+    const st = getDimStatus(di);
+    b += `  ${dim.code} — ${dim.title}: ${st.label}\n`;
+  });
+  b += `\n${'='.repeat(50)}\nSent via Execution Gap Mini Assessment · Concept360 · ${date}`;
+  return b;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
